@@ -44,7 +44,7 @@ ContactSubmit.prototype.render = function(cb) {
       }
 
       var contact = {
-        name: post.name,
+        name: post.name + ' (' + pb.utils.uniqueId().toString() + ')',
         email: post.email,
         description: post.email,
         comment: post.comment,
