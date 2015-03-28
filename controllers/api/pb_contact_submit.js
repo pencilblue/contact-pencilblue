@@ -38,7 +38,7 @@ module.exports = function(pb) {
 
         var cos = new pb.CustomObjectService();
         cos.loadTypeByName('pb_contact', function(err, contactType) {
-          if(util.isError(err) || !pb.utils.isObject(contactType)) {
+          if(util.isError(err) || !util.isObject(contactType)) {
             cb({
               code: 400,
               content: pb.BaseController.apiResponse(pb.BaseController.API_ERROR, self.ls.get('INVALID_UID'))
@@ -47,7 +47,7 @@ module.exports = function(pb) {
           }
 
           var contact = {
-            name: post.name + ' (' + pb.utils.uniqueId().toString() + ')',
+            name: post.name + ' (' + util.uniqueId() + ')',
             email: post.email,
             description: post.email,
             comment: post.comment,
