@@ -15,78 +15,80 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-function ContactSubmit() {};
+module.exports = function(pb) {
+    
+    //pb depdencies
+    var util = pb.util;
+    
+    function ContactSubmit() {};
+    util.inherits(ContactSubmit, pb.BaseController);
 
-//inheritance
-util.inherits(ContactSubmit, pb.BaseController);
+    ContactSubmit.prototype.render = function(cb) {
+      var self = this;
 
-ContactSubmit.prototype.render = function(cb) {
-  var self = this;
+      this.getJSONPostParams(function(err, post) {
+        var message = self.hasRequiredParams(post, ['name', 'email']);
+        if(message) {
+          cb({
+            code: 400,
+            content: pb.BaseController.apiResponse(pb.BaseController.API_ERROR, message)
+          });
+          return;
+        }
 
-  this.getJSONPostParams(function(err, post) {
-    var message = self.hasRequiredParams(post, ['name', 'email']);
-    if(message) {
-      cb({
-        code: 400,
-        content: pb.BaseController.apiResponse(pb.BaseController.API_ERROR, message)
-      });
-      return;
-    }
+        var cos = new pb.CustomObjectService();
+        cos.loadTypeByName('pb_contact', function(err, contactType) {
+          if(util.isError(err) || !util.isObject(contactType)) {
+            cb({
+              code: 400,
+              content: pb.BaseController.apiResponse(pb.BaseController.API_ERROR, self.ls.get('INVALID_UID'))
+            });
+            return;
+          }
 
-    var cos = new pb.CustomObjectService();
-    cos.loadTypeByName('pb_contact', function(err, contactType) {
-      if(util.isError(err) || !pb.utils.isObject(contactType)) {
-        cb({
-          code: 400,
-          content: pb.BaseController.apiResponse(pb.BaseController.API_ERROR, self.ls.get('INVALID_UID'))
+          var contact = {
+            name: post.name + ' (' + util.uniqueId() + ')',
+            email: post.email,
+            description: post.email,
+            comment: post.comment,
+            date: new Date()
+          };
+
+          pb.CustomObjectService.formatRawForType(contact, contactType);
+          var customObjectDocument = pb.DocumentCreator.create('custom_object', contact);
+
+          cos.save(customObjectDocument, contactType, function(err, result) {
+            if(util.isError(err)) {
+              return cb({
+                code: 500,
+                content: pb.BaseController.apiResponse(pb.BaseController.API_ERROR, self.ls.get('ERROR_SAVING'))
+              });
+            }
+            else if(util.isArray(result) && result.length > 0) {
+              return cb({
+                code: 500,
+                content: pb.BaseController.apiResponse(pb.BaseController.API_ERROR, self.ls.get('ERROR_SAVING'))
+              });
+            }
+
+            cb({content: pb.BaseController.apiResponse(pb.BaseController.API_SUCCESS, 'contact submitted')});
+          });
         });
-        return;
-      }
-
-      var contact = {
-        name: post.name + ' (' + pb.utils.uniqueId().toString() + ')',
-        email: post.email,
-        description: post.email,
-        comment: post.comment,
-        date: new Date()
-      };
-
-      pb.CustomObjectService.formatRawForType(contact, contactType);
-      var customObjectDocument = pb.DocumentCreator.create('custom_object', contact);
-
-      cos.save(customObjectDocument, contactType, function(err, result) {
-        if(util.isError(err)) {
-          cb({
-            code: 500,
-            content: pb.BaseController.apiResponse(pb.BaseController.API_ERROR, self.ls.get('ERROR_SAVING'))
-          });
-          return;
-        }
-        else if(util.isArray(result) && result.length > 0) {
-          cb({
-            code: 500,
-            content: pb.BaseController.apiResponse(pb.BaseController.API_ERROR, self.ls.get('ERROR_SAVING'))
-          });
-          return;
-        }
-
-        cb({content: pb.BaseController.apiResponse(pb.BaseController.API_SUCCESS, 'contact submitted')});
       });
-    });
-  });
-};
+    };
 
-ContactSubmit.getRoutes = function(cb) {
-  var routes = [
-    {
-      method: 'post',
-      path: '/api/contact/pb_contact_submit',
-      auth_required: false,
-      content_type: 'application/json'
-    }
-  ];
-  cb(null, routes);
-};
+    ContactSubmit.getRoutes = function(cb) {
+      var routes = [
+        {
+          method: 'post',
+          path: '/api/contact/pb_contact_submit',
+          auth_required: false,
+          content_type: 'application/json'
+        }
+      ];
+      cb(null, routes);
+    };
 
-//exports
-module.exports = ContactSubmit;
+    //exports
+    return ContactSubmit;
+};
