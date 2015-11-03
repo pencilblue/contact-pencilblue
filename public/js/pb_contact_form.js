@@ -3,9 +3,11 @@
 
   submitPBContact = function() {
     if(!$('#pb_contact_name').val().length || !$('#pb_contact_email').val().length) {
+      $('#pb_contact_invalid').show();
       return;
     }
 
+    $('#pb_contact_invalid').hide();
     $('#pb_contact_submit').prop('disabled', true);
     $('#pb_contact_spinner').show();
 

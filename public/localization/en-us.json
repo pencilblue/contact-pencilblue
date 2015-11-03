@@ -1,4 +1,5 @@
 {
   "CONTACT_SUCCESS": "Your contact inquiry was successfully submitted",
-  "CONTACT_ERROR": "There was an error submitting your contact inquiry"
+  "CONTACT_ERROR": "There was an error submitting your contact inquiry",
+  "CONTACT_INVALID": "Your name and email address are required"
 }
