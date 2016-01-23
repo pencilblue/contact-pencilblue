@@ -3,6 +3,7 @@
   "name": "Contact Form",
   "description": "A basic contact form plugin.",
   "version": "0.2.0",
+  "pb_version": "0.5.x",
   "author": {
     "name": "PencilBlue",
     "email": "info@pencilblue.org",
