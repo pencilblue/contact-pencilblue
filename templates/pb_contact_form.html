@@ -1,21 +1,21 @@
 <form id="pb_contact_form">
   <div class="form-group">
-    <label for="pb_contact_name">^loc_NAME^</label>
+    <label for="pb_contact_name">^loc_generic.NAME^</label>
     <input type="text" id="pb_contact_name" name="pb_contact_name" class="form-control" required></input>
   </div>
   <div class="form-group">
-    <label for="pb_contact_email">^loc_EMAIL^</label>
+    <label for="pb_contact_email">^loc_users.EMAIL^</label>
     <input type="email" id="pb_contact_email" name="pb_contact_email" class="form-control" required></input>
   </div>
   <div class="form-group">
-    <label for="pb_contact_comment">^loc_COMMENT^</label>
+    <label for="pb_contact_comment">^loc_generic.COMMENT^</label>
     <textarea id="pb_contact_comment" name="pb_contact_comment" class="form-control" style="min-height: 100px"></textarea>
   </div>
   <button type="submit" id="pb_contact_submit" class="btn btn-primary" onclick="submitPBContact()">
     <span id="pb_contact_spinner" style="display: none">
       <i class="fa fa-circle-o-notch fa-spin"></i>&nbsp;
     </span>
-    ^loc_SUBMIT^
+    ^loc_generic.SUBMIT^
   </button>
   <div id="pb_contact_success" class="form-group" style="display: none">^loc_CONTACT_SUCCESS^</div>
   <div id="pb_contact_error" class="form-group" style="display: none">^loc_CONTACT_ERROR^</div>

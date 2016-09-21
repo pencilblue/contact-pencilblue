@@ -2,7 +2,7 @@
   "uid": "contact-pencilblue",
   "name": "Contact Form",
   "description": "A basic contact form plugin.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "pb_version": ">=0.5.x <1.x",
   "author": {
     "name": "PencilBlue",
