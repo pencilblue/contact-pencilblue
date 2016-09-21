@@ -16,10 +16,10 @@
 */
 
 module.exports = function(pb) {
-    
+
     //pb depdencies
     var util = pb.util;
-    
+
     function ContactSubmit() {};
     util.inherits(ContactSubmit, pb.BaseController);
 
@@ -29,21 +29,19 @@ module.exports = function(pb) {
       this.getJSONPostParams(function(err, post) {
         var message = self.hasRequiredParams(post, ['name', 'email']);
         if(message) {
-          cb({
+          return cb({
             code: 400,
-            content: pb.BaseController.apiResponse(pb.BaseController.API_ERROR, message)
+            content: pb.BaseController.apiResponse(pb.BaseController.API_FAILURE, message)
           });
-          return;
         }
 
         var cos = new pb.CustomObjectService();
         cos.loadTypeByName('pb_contact', function(err, contactType) {
           if(util.isError(err) || !util.isObject(contactType)) {
-            cb({
+            return cb({
               code: 400,
-              content: pb.BaseController.apiResponse(pb.BaseController.API_ERROR, self.ls.get('INVALID_UID'))
+              content: pb.BaseController.apiResponse(pb.BaseController.API_FAILURE, self.ls.g('generic.INVALID_UID'))
             });
-            return;
           }
 
           var contact = {
@@ -61,13 +59,13 @@ module.exports = function(pb) {
             if(util.isError(err)) {
               return cb({
                 code: 500,
-                content: pb.BaseController.apiResponse(pb.BaseController.API_ERROR, self.ls.get('ERROR_SAVING'))
+                content: pb.BaseController.apiResponse(pb.BaseController.API_FAILURE, self.ls.g('generic.ERROR_SAVING'))
               });
             }
             else if(util.isArray(result) && result.length > 0) {
               return cb({
                 code: 500,
-                content: pb.BaseController.apiResponse(pb.BaseController.API_ERROR, self.ls.get('ERROR_SAVING'))
+                content: pb.BaseController.apiResponse(pb.BaseController.API_FAILURE, self.ls.g('generic.ERROR_SAVING'))
               });
             }
 
