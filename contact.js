@@ -1,9 +1,8 @@
+module.exports = function (pb) {
 
-module.exports = function(pb) {
-    
     //pb dependencies
     var util = pb.util;
-    
+
     /**
      * Contact Form - A basic contact form plugin.
      * look like.
@@ -11,7 +10,7 @@ module.exports = function(pb) {
      * @author Blake Callens <blake@pencilblue.org>
      * @copyright 2015 PencilBlue, LLC
      */
-    function Contact(){}
+    function Contact() {}
 
     /**
      * Called when the application is being installed for the first time.
@@ -19,37 +18,41 @@ module.exports = function(pb) {
      * @param cb A callback that must be called upon completion.  cb(Error, Boolean).
      * The result should be TRUE on success and FALSE on failure
      */
-    Contact.onInstall = function(cb) {
-        var self = this;
-        
-        var cos = new pb.CustomObjectService();
-        cos.loadTypeByName('pb_contact', function(err, contactType) {
-            if (util.isError(err) || contactType) {
-                return cb(err, !util.isError(err));
-            }
-            
-            var contactValues = {
-                name: 'pb_contact',
-                fields: {
-                    name: {
-                        field_type: 'text'
-                    },
-                    email: {
-                        field_type: 'text'
-                    },
-                    comment: {
-                        field_type: 'text'
-                    },
-                    date: {
-                        field_type: 'date'
-                    }
-                }
-            };
+    Contact.onInstallWithContext = function (context, cb) {
+        if (context.site === 'global') {
+            cb(null, true);
+        } else {
+            var self = this;
+            var cos = new pb.CustomObjectService(context.site, false);
 
-            cos.saveType(contactValues, function(err, contactType) {
-                cb(err, !util.isError(err));
+            cos.loadTypeByName('pb_contact', function (err, contactType) {
+                if (util.isError(err) || contactType) {
+                    return cb(err, !util.isError(err));
+                }
+
+                var contactValues = {
+                    name: 'pb_contact',
+                    fields: {
+                        name: {
+                            field_type: 'text'
+                        },
+                        email: {
+                            field_type: 'text'
+                        },
+                        comment: {
+                            field_type: 'text'
+                        },
+                        date: {
+                            field_type: 'date'
+                        }
+                    }
+                };
+
+                cos.saveType(contactValues, function (err, contactType) {
+                    cb(err, !util.isError(err));
+                });
             });
-        });
+        }
     };
 
     /**
@@ -60,8 +63,8 @@ module.exports = function(pb) {
      * @param cb A callback that must be called upon completion.  cb(Error, Boolean).
      * The result should be TRUE on success and FALSE on failure
      */
-    Contact.onUninstall = function(cb) {
-      cb(null, true);
+    Contact.onUninstall = function (cb) {
+        cb(null, true);
     };
 
     /**
@@ -72,8 +75,8 @@ module.exports = function(pb) {
      * @param cb A callback that must be called upon completion.  cb(Error, Boolean).
      * The result should be TRUE on success and FALSE on failure
      */
-    Contact.onStartup = function(cb) {
-      cb(null, true);
+    Contact.onStartup = function (cb) {
+        cb(null, true);
     };
 
     /**
@@ -83,8 +86,8 @@ module.exports = function(pb) {
      * @param cb A callback that must be called upon completion.  cb(Error, Boolean).
      * The result should be TRUE on success and FALSE on failure
      */
-    Contact.onShutdown = function(cb) {
-      cb(null, true);
+    Contact.onShutdown = function (cb) {
+        cb(null, true);
     };
 
     //exports

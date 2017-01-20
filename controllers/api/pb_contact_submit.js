@@ -35,7 +35,7 @@ module.exports = function(pb) {
           });
         }
 
-        var cos = new pb.CustomObjectService();
+        var cos = new pb.CustomObjectService(self.ts.siteUid, false);
         cos.loadTypeByName('pb_contact', function(err, contactType) {
           if(util.isError(err) || !util.isObject(contactType)) {
             return cb({
